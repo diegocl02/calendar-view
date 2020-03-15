@@ -41,7 +41,7 @@
   width: 50%;
   height: 50%;
   margin: 15%;
-  background-color: #816E6C;
+  background-color: #F3F4EF;
 }
 
 .form-container {
@@ -91,4 +91,26 @@
   flex-wrap: wrap;
   width: 100%;
   flex-direction: row;
+}
+
+.input-title{
+  margin: 10px;
+  width: 80%;
+}
+
+.input-description{
+  margin: 10px;
+  width: 80%;
+}
+
+.date-picker{
+  margin: 10px;
+  width: 80%;
+  color: #F3F4EF;
+}
+
+.submit-btn{
+  margin: 20px 10px;
+  width: 200px;
+  color: black;
 }

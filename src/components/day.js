@@ -1,13 +1,17 @@
 import React, { useState } from 'react'
 import { Dialog } from './dialog'
-import DateTimePicker from 'react-datetime-picker';
+import TextField from '@material-ui/core/TextField';
 
-export const Day = ({ number, reminders, handleNewReminder }) => {
+export const Day = ({ date, number, reminders, handleNewReminder }) => {
     const [showDialog, setShowDialog] = useState(false)
     const [newReminder, setNewReminder] = useState({})
 
     const onTitleChange = (event) => {
         setNewReminder({ ...newReminder, title: event.target.value })
+    }
+    const onTimeChange = (event) => {
+        console.log(new Date(event.target.value).getTime())
+        setNewReminder({ ...newReminder, time: new Date(event.target.value).getTime() })
     }
     const handleCloseDialog = () => {
         setShowDialog(false)
@@ -48,17 +52,35 @@ export const Day = ({ number, reminders, handleNewReminder }) => {
             handleCloseDialog={handleCloseDialog}>
             <div key={"form"} className={"form-container"}>
                 <input
-                    className={"input"}
+                    className={"input-title"}
                     type="text"
-                    placeholder="Add Title"
+                    placeholder="Title"
                     value={newReminder.title || ""}
                     onChange={onTitleChange}
                 />
-                <DateTimePicker
-                    onChange={this.onChange}
-                    value={this.state.date}
+                <input
+                    className={"input-description"}
+                    type="text"
+                    placeholder="Description"
+                    value={newReminder.title || ""}
+                    onChange={onTitleChange}
+                />
+                <TextField
+                    id="time"
+                    label="Set time"
+                    type="datetime-local"
+                    defaultValue={date.format("YYYY-MM-DDThh:mm")}
+                    className={"date-picker"}
+                    onChange={onTimeChange}
+                    InputLabelProps={{
+                        shrink: true,
+                    }}
+                    inputProps={{
+                        step: 300,
+                    }}
                 />
                 <button
+                    className={"submit-btn"}
                     onClick={handleSubmit}
                     type="submit">
                     Add reminder
