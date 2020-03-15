@@ -12,6 +12,13 @@ const getFirstDayOfMonth = (date) => {
     return date.startOf("month").day()
 }
 
+const getRemindersByDay = (date, reminders) => {
+    return reminders.filter(reminder =>
+        moment(reminder.time)
+            .isSame(moment(date, "YYYY-MM-D"), 'day')
+    )
+}
+
 const getDaysArray = (date, reminders) => {
     let daysArray = []
     let dayCount = 0
@@ -23,10 +30,16 @@ const getDaysArray = (date, reminders) => {
             if (j === startDay || dayCount > 0) {
                 dayCount++;
             }
-            if (dayCount <= date.daysInMonth())
-                week.push({ dayNumber: dayCount })
+            if (dayCount <= date.daysInMonth()){
+                let newDate = moment(`${date.format("YYYY-MM-")}${dayCount}`, "YYYY-MM-D")
+                week.push({
+                    date: newDate,
+                    dayNumber: dayCount,
+                    reminders: getRemindersByDay(newDate, reminders)
+                })
+            }
             else
-                week.push({ dayNumber: 0 })
+                week.push({ dayNumber: 0, reminders: [] })
         }
         daysArray.push(week)
     }
@@ -46,10 +59,9 @@ export const Calendar = (props) => {
         })
     }
     const weekdays = moment.weekdaysShort()
-    const dayArray = getDaysArray(date)
-    console.log(dayArray)
+    const dayArray = getDaysArray(date, reminders)
     return <div className={"calendar-container"}>
-        <h1> Jobsity Calendar - Reminder</h1>
+        <h2> {date.format("MMMM")} {date.format("YYYY")}</h2>
         <div className={"header-row"}>
             {
                 weekdays.map(weekday => {
@@ -61,12 +73,14 @@ export const Calendar = (props) => {
         </div>
         <div className={"days-container"}>
             {
-                dayArray.map(week => {
-                    return <div className={"week-container"}>
+                dayArray.map((week, weekIndex) => {
+                    return <div key={`week-${weekIndex}`} className={"week-container"}>
                         {
-                            week.map(day => <Day
+                            week.map((day, dayIndex) => <Day
+                                key={`day-${dayIndex}`}
+                                date={day.date}
                                 number={day.dayNumber}
-                                reminders={reminders}
+                                reminders={day.reminders}
                                 handleNewReminder={handleNewReminder}
                             />)
                         }
