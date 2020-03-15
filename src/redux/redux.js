@@ -7,14 +7,14 @@ const initialState = {
     reminders: [
         {
             id: uuidv1(),
-            time: 1584208263,
+            time: 1584208263000,
             city: "Sao Paulo",
             color: "#F7F9F8",
-            title: "Pet"
+            title: "Travel"
         },
         {
             id: uuidv1(),
-            time: 1584208263,
+            time: 1584208263000,
             city: "Sao Paulo",
             color: "#F7F9F8",
             title: "Pet"

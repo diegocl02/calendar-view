@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { Dialog } from './dialog'
+import DateTimePicker from 'react-datetime-picker';
 
 export const Day = ({ number, reminders, handleNewReminder }) => {
     const [showDialog, setShowDialog] = useState(false)
@@ -24,14 +25,15 @@ export const Day = ({ number, reminders, handleNewReminder }) => {
         e.stopPropagation()
     }
 
-    return [<div className="day-container" onClick={handleOpenDialog}>
-        <div className="day-number">
+    return [<div key={'day'} className="day-container" onClick={handleOpenDialog}>
+        <div key={'day-number'} className="day-number">
             <span>{number}</span>
         </div>
-        <div className="reminders-container">
+        <div key={'day-reminder'} className="reminders-container">
             {
-                reminders.map(reminder => {
+                reminders.map((reminder, index) => {
                     return <div
+                        key={index}
                         className={"mini-reminder"}
                         onClick={handleClickReminder}>
                         {reminder.title}
@@ -42,14 +44,19 @@ export const Day = ({ number, reminders, handleNewReminder }) => {
     </div>,
     showDialog
         ? <Dialog
+            key={"dialog"}
             handleCloseDialog={handleCloseDialog}>
-            <div className={"form-container"}>
+            <div key={"form"} className={"form-container"}>
                 <input
                     className={"input"}
                     type="text"
                     placeholder="Add Title"
                     value={newReminder.title || ""}
                     onChange={onTitleChange}
+                />
+                <DateTimePicker
+                    onChange={this.onChange}
+                    value={this.state.date}
                 />
                 <button
                     onClick={handleSubmit}
