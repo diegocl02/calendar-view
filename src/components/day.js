@@ -1,35 +1,29 @@
 import React, { useState } from 'react'
 import { Dialog } from './dialog'
-import TextField from '@material-ui/core/TextField';
+import { ReminderForm } from './reminder-form'
 
-export const Day = ({ date, number, reminders, handleNewReminder }) => {
-    const [showDialog, setShowDialog] = useState(false)
-    const [newReminder, setNewReminder] = useState({})
+import { config } from '../shared/config'
 
-    const onTitleChange = (event) => {
-        setNewReminder({ ...newReminder, title: event.target.value })
-    }
-    const onTimeChange = (event) => {
-        console.log(new Date(event.target.value).getTime())
-        setNewReminder({ ...newReminder, time: new Date(event.target.value).getTime() })
-    }
-    const handleCloseDialog = () => {
-        setShowDialog(false)
-    }
-    const handleOpenDialog = (e) => {
-        e.preventDefault()
-        setShowDialog(true)
-    }
-    const handleSubmit = (e) => {
-        e.preventDefault()
-        setShowDialog(false)
+export const Day = ({ date, number, reminders, handleNewReminder, handleEditedReminder }) => {
+    const [showNewReminderModal, setshowNewReminderModal] = useState(false)
+    const [showEditingReminderModal, setEditingReminderModal] = useState(false)
+    const [selectedReminder, setSelectedReminder] = useState({})
+
+    const handleSubmitNewReminder = (newReminder) => {
+        setshowNewReminderModal(false)
         handleNewReminder(newReminder)
     }
-    const handleClickReminder = (e) => {
-        e.stopPropagation()
+    const handleSubmitEditedReminder = (editedReminder) => {
+        setEditingReminderModal(false)
+        console.log(editedReminder)
+        handleEditedReminder(editedReminder)
     }
-
-    return [<div key={'day'} className="day-container" onClick={handleOpenDialog}>
+    return [<div key={'day'}
+        className="day-container"
+        onClick={(e) => {
+            e.preventDefault()
+            setshowNewReminderModal(true)
+        }}>
         <div key={'day-number'} className="day-number">
             <span>{number}</span>
         </div>
@@ -39,53 +33,41 @@ export const Day = ({ date, number, reminders, handleNewReminder }) => {
                     return <div
                         key={index}
                         className={"mini-reminder"}
-                        onClick={handleClickReminder}>
+                        style={{ backgroundColor: reminder.color }}
+                        onClick={(e) => {
+                            e.stopPropagation()
+                            setEditingReminderModal(true)
+                            setSelectedReminder(reminder)
+                        }}>
                         {reminder.title}
                     </div>
                 })
             }
         </div>
     </div>,
-    showDialog
+    showNewReminderModal
         ? <Dialog
             key={"dialog"}
-            handleCloseDialog={handleCloseDialog}>
-            <div key={"form"} className={"form-container"}>
-                <input
-                    className={"input-title"}
-                    type="text"
-                    placeholder="Title"
-                    value={newReminder.title || ""}
-                    onChange={onTitleChange}
-                />
-                <input
-                    className={"input-description"}
-                    type="text"
-                    placeholder="Description"
-                    value={newReminder.title || ""}
-                    onChange={onTitleChange}
-                />
-                <TextField
-                    id="time"
-                    label="Set time"
-                    type="datetime-local"
-                    defaultValue={date.format("YYYY-MM-DDThh:mm")}
-                    className={"date-picker"}
-                    onChange={onTimeChange}
-                    InputLabelProps={{
-                        shrink: true,
-                    }}
-                    inputProps={{
-                        step: 300,
-                    }}
-                />
-                <button
-                    className={"submit-btn"}
-                    onClick={handleSubmit}
-                    type="submit">
-                    Add reminder
-                </button>
-            </div>
+            handleCloseDialog={() => setshowNewReminderModal(false)}>
+            <ReminderForm
+                defaultReminder={{
+                    color: config.theme.reminderColors[0],
+                    time: new Date(date).getTime()
+                }}
+                date={date}
+                onSubmit={handleSubmitNewReminder}
+                buttonLabel={"Add Reminder"} />
+        </Dialog>
+        : null,
+    showEditingReminderModal && selectedReminder
+        ? <Dialog
+            key={"dialog"}
+            handleCloseDialog={() => setEditingReminderModal(false)}>
+            <ReminderForm
+                defaultReminder={selectedReminder}
+                date={date}
+                onSubmit={handleSubmitEditedReminder}
+                buttonLabel={"Update Reminder"} />
         </Dialog>
         : null
     ]

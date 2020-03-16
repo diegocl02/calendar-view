@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Day } from './day'
 import { useSelector, useDispatch } from 'react-redux'
-import { addReminderAction } from '../redux/redux'
+import { addReminderAction, updateReminderAction, delReminderAction } from '../redux/redux'
 import { v1 as uuidv1 } from 'uuid'
 import moment from 'moment'
 
@@ -16,7 +16,7 @@ const getRemindersByDay = (date, reminders) => {
     return reminders.filter(reminder =>
         moment(reminder.time)
             .isSame(moment(date, "YYYY-MM-D"), 'day')
-    )
+    ).sort((remA, remB) => remA.time - remB.time)
 }
 
 const getDaysArray = (date, reminders) => {
@@ -51,12 +51,16 @@ export const Calendar = (props) => {
     const date = useSelector((state) => state.date)
     const dispatch = useDispatch()
     const addReminder = (reminder) => dispatch(addReminderAction(reminder))
+    const updateReminder = (reminder) => dispatch(updateReminderAction(reminder))
 
     const handleNewReminder = (reminder) => {
         addReminder({
             ...reminder,
             id: uuidv1()
         })
+    }
+    const handleEditedReminder = (reminder) => {
+        updateReminder(reminder)
     }
     const weekdays = moment.weekdaysShort()
     const dayArray = getDaysArray(date, reminders)
@@ -82,6 +86,7 @@ export const Calendar = (props) => {
                                 number={day.dayNumber}
                                 reminders={day.reminders}
                                 handleNewReminder={handleNewReminder}
+                                handleEditedReminder={handleEditedReminder}
                             />)
                         }
                     </div>

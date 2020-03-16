@@ -9,14 +9,14 @@ const initialState = {
             id: uuidv1(),
             time: 1584208263000,
             city: "Sao Paulo",
-            color: "#F7F9F8",
+            color: "#878674",
             title: "Travel"
         },
         {
             id: uuidv1(),
             time: 1584208263000,
             city: "Sao Paulo",
-            color: "#F7F9F8",
+            color: "#A8CDE1",
             title: "Pet"
         }
     ]
@@ -27,7 +27,8 @@ export const store = createStore(
     initialState
 )
 
-function reducer(state, {type, payload}) {
+function reducer(state, { type, payload }) {
+    console.log('reducer',payload)
     switch (type) {
         case "ADD_REMINDER":
             return {
@@ -42,6 +43,14 @@ function reducer(state, {type, payload}) {
                 ...state,
                 reminders: state.reminders.filter(remind => remind.id !== payload)
             }
+        case "UPDATE_REMINDER":
+            return {
+                ...state,
+                reminders: [
+                    ...state.reminders.filter(remind => remind.id !== payload.id),
+                    payload
+                ]
+            }
         default:
             return state
     }
@@ -49,6 +58,11 @@ function reducer(state, {type, payload}) {
 
 export const addReminderAction = (reminder) => ({
     type: "ADD_REMINDER",
+    payload: reminder
+})
+
+export const updateReminderAction = (reminder) => ({
+    type: "UPDATE_REMINDER",
     payload: reminder
 })
 

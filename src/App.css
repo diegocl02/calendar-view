@@ -3,8 +3,9 @@
   flex-direction: column;
   height: 110px;
   border: thin solid black;
-  flex: 1;
+  flex: 1 1 0px;
   padding: 5px;
+  width: 0;
 }
 
 .day-number {
@@ -17,7 +18,7 @@
 
 .mini-reminder {
   height: 13px;
-  font-size: 12px;
+  font-size: 11px;
   width: 90%;
   margin: 2px;
   padding: 4px;
@@ -25,6 +26,10 @@
   border-radius: 4px;
   background-color: #B3A35F;
   color:#F3F4EF;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
 }
 
 .dialog {
@@ -40,7 +45,7 @@
 .dialog-content {
   width: 50%;
   height: 50%;
-  margin: 15%;
+  margin: 10% 25%;
   background-color: #F3F4EF;
 }
 
@@ -96,11 +101,13 @@
 .input-title{
   margin: 10px;
   width: 80%;
+  font-size: 1rem;
 }
 
 .input-description{
   margin: 10px;
   width: 80%;
+  font-size: 1rem;
 }
 
 .date-picker{
@@ -113,4 +120,24 @@
   margin: 20px 10px;
   width: 200px;
   color: black;
+  font-size: 1rem;
+}
+
+.color-select-container{
+  display: flex;
+  flex-direction: row;
+  width: 80%;
+  margin: 10px;
+  align-items: center;
+}
+
+.color-input {
+  width: 15px;
+  height: 15px;
+  margin: 5px;
+  cursor: pointer;
+}
+
+.color-label {
+  margin: 5px 10px 5px 0px;
 }
