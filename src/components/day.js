@@ -1,10 +1,17 @@
 import React, { useState } from 'react'
 import { Dialog } from './dialog'
 import { ReminderForm } from './reminder-form'
-
 import { config } from '../shared/config'
+import { kelvinToCelsius } from '../shared/utils'
 
-export const Day = ({ date, number, reminders, handleNewReminder, handleEditedReminder }) => {
+export const Day = ({
+    date,
+    dayNumber,
+    reminders,
+    handleNewReminder,
+    handleEditedReminder,
+    isDisabled
+}) => {
     const [showNewReminderModal, setshowNewReminderModal] = useState(false)
     const [showEditingReminderModal, setEditingReminderModal] = useState(false)
     const [selectedReminder, setSelectedReminder] = useState({})
@@ -15,18 +22,19 @@ export const Day = ({ date, number, reminders, handleNewReminder, handleEditedRe
     }
     const handleSubmitEditedReminder = (editedReminder) => {
         setEditingReminderModal(false)
-        console.log(editedReminder)
         handleEditedReminder(editedReminder)
     }
     console.log(selectedReminder)
     return [<div key={'day'}
-        className="day-container"
+        className={`day-container${isDisabled ? ' disabled' : ''}`}
         onClick={(e) => {
+            if (isDisabled)
+                return
             e.preventDefault()
             setshowNewReminderModal(true)
         }}>
         <div key={'day-number'} className="day-number">
-            <span>{number}</span>
+            <span>{dayNumber}</span>
         </div>
         <div key={'day-reminder'} className="reminders-container">
             {
@@ -36,6 +44,8 @@ export const Day = ({ date, number, reminders, handleNewReminder, handleEditedRe
                         className={"mini-reminder"}
                         style={{ backgroundColor: reminder.color }}
                         onClick={(e) => {
+                            if (isDisabled)
+                                return
                             e.stopPropagation()
                             setEditingReminderModal(true)
                             setSelectedReminder(reminder)
@@ -50,32 +60,42 @@ export const Day = ({ date, number, reminders, handleNewReminder, handleEditedRe
         ? <Dialog
             key={"dialog"}
             handleCloseDialog={() => setshowNewReminderModal(false)}>
-            <ReminderForm
-                defaultReminder={{
-                    color: config.theme.reminderColors[0],
-                    time: new Date(date).getTime()
-                }}
-                date={date}
-                onSubmit={handleSubmitNewReminder}
-                buttonLabel={"Add Reminder"} />
-        </Dialog>
+            <div className={"edit-dialog"}>
+                <h3> Add New Reminder </h3>
+                <ReminderForm
+                    defaultReminder={{
+                        color: config.theme.reminderColors[0],
+                        time: new Date(date).getTime()
+                    }}
+                    date={date}
+                    onSubmit={handleSubmitNewReminder}
+                    buttonLabel={"Add Reminder"} />
+            </div>
+        </Dialog >
         : null,
     showEditingReminderModal && selectedReminder
         ? <Dialog
             key={"dialog"}
             handleCloseDialog={() => setEditingReminderModal(false)}>
             <div className={"edit-dialog"}>
+                <h3> Edit Reminder </h3>
                 <ReminderForm
                     defaultReminder={selectedReminder}
                     onSubmit={handleSubmitEditedReminder}
                     buttonLabel={"Update Reminder"} />
                 <div className={"weather"}>
-                    {selectedReminder.weather && selectedReminder.weather.main 
-                        && <span> Temperature: {selectedReminder.weather.main.temp} </span>}
-                    {selectedReminder.weather && selectedReminder.weather.main 
-                        && <span> Min: {selectedReminder.weather.main.temp_min} </span>}
-                    {selectedReminder.weather && selectedReminder.weather.main 
-                        && <span> Max: {selectedReminder.weather.main.temp_max} </span>}
+                    {selectedReminder.weather && selectedReminder.weather.main
+                        && <span className={"forecast-span"}>
+                            <b>Forecast for this event</b>: {`${kelvinToCelsius(selectedReminder.weather.main.temp)} C°`}
+                        </span>}
+                    {selectedReminder.weather && selectedReminder.weather.weather
+                        && <span className={"forecast-span"}> - {selectedReminder.weather.weather[0].main} </span>}
+                    {selectedReminder.weather && selectedReminder.weather.weather
+                        && <img
+                            className={"weather-icon"}
+                            alt={`weather-icon`}
+                            src={`http://openweathermap.org/img/wn/${selectedReminder.weather.weather[0].icon}@2x.png`}>
+                        </img>}
                 </div>
             </div>
         </Dialog>

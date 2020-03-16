@@ -14,7 +14,17 @@ const initialState = {
             city: "Sao Paulo",
             color: "#878674",
             title: "Travel",
-            weather: {}
+            weather: {
+                main: {
+                    temp: 293
+                },
+                weather: [
+                    {
+                        main: "cloud",
+                        icon: "11d"
+                    }
+                ]
+            }
         },
         {
             id: uuidv1(),
@@ -22,7 +32,17 @@ const initialState = {
             city: "Sao Paulo",
             color: "#A8CDE1",
             title: "Pet",
-            weather: {}
+            weather: {
+                main: {
+                    temp: 296
+                },
+                weather: [
+                    {
+                        main: "cloud",
+                        icon: "10d"
+                    }
+                ]
+            }
         }
     ]
 }
@@ -73,10 +93,20 @@ function reducer(state, { type, payload }) {
                     }
                 ]
             }
+        case "UPDATE_MONTH":
+            return {
+                ...state,
+                date: payload
+            }
         default:
             return state
     }
 }
+
+export const updateCurrentMonth = (date) => ({
+    type: "UPDATE_MONTH",
+    payload: date
+})
 
 export const addReminderAction = (reminder) => ({
     type: "ADD_REMINDER",
@@ -101,7 +131,6 @@ export const fetchWeatherInfo = (reminder) => {
         axios.get(`https://api.openweathermap.org/data/2.5/forecast?q=${reminder.city}&appid=${config.API_KEY}`)
             .then(res => res)
             .then(res => {
-                console.log(res);
                 dispatch({
                     type: "FETCH_WEATHER",
                     payload: {
@@ -111,7 +140,7 @@ export const fetchWeatherInfo = (reminder) => {
                 })
             })
             .catch(err => {
-                console.log(err)
+                console.log(`There was an error while trying to fecth the weather: ${err}`)
             })
     }
 }
