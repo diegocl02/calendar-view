@@ -10,7 +10,10 @@ export const config = {
             "#3A372B",
             "#878674",
             "#F3BB45",
-            "#A8CDE1"
+            "#A8CDE1",
+            "#43BFD6",
+            "#F0BE1E",
+            "#976AAF"
         ]
     }
 }

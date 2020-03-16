@@ -65,7 +65,6 @@ export const Day = ({ date, number, reminders, handleNewReminder, handleEditedRe
             handleCloseDialog={() => setEditingReminderModal(false)}>
             <ReminderForm
                 defaultReminder={selectedReminder}
-                date={date}
                 onSubmit={handleSubmitEditedReminder}
                 buttonLabel={"Update Reminder"} />
         </Dialog>

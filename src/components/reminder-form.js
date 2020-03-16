@@ -4,10 +4,12 @@ import TextField from '@material-ui/core/TextField'
 import { config } from '../shared/config'
 import moment from 'moment'
 
-export const ReminderForm = ({defaultReminder, onSubmit, date, buttonLabel}) => {
+export const ReminderForm = ({ defaultReminder, onSubmit, buttonLabel }) => {
     const [newReminder, setNewReminder] = useState(defaultReminder)
+    const [errorMsg, setErrorMsg] = useState(null)
 
     const onTitleChange = (event) => {
+        setErrorMsg(null)
         setNewReminder({ ...newReminder, title: event.target.value })
     }
     const onDescriptionChange = (event) => {
@@ -17,10 +19,23 @@ export const ReminderForm = ({defaultReminder, onSubmit, date, buttonLabel}) => 
         setNewReminder({ ...newReminder, city: event.target.value })
     }
     const onTimeChange = (event) => {
+        setErrorMsg(null)
         setNewReminder({ ...newReminder, time: new Date(event.target.value).getTime() })
     }
     const onColorChange = (color) => {
-        setNewReminder({ ...newReminder, color: color})
+        setNewReminder({ ...newReminder, color: color })
+    }
+    const validateFields = (newReminder) => {
+        console.log(newReminder)
+        if (newReminder.title === undefined || newReminder.title === "") {
+            setErrorMsg("You must use a title")
+            return false
+        }
+        if (newReminder.time === undefined || isNaN(newReminder.time)) {
+            setErrorMsg("You must pick a date")
+            return false
+        }
+        return true
     }
     return <div key={"form"} className={"form-container"}>
         <input
@@ -29,6 +44,7 @@ export const ReminderForm = ({defaultReminder, onSubmit, date, buttonLabel}) => 
             placeholder="Title"
             value={newReminder.title || ""}
             onChange={onTitleChange}
+            maxLength="30"
         />
         <input
             className={"input-description"}
@@ -36,6 +52,7 @@ export const ReminderForm = ({defaultReminder, onSubmit, date, buttonLabel}) => 
             placeholder="Description"
             value={newReminder.description || ""}
             onChange={onDescriptionChange}
+            maxLength="30"
         />
         <input
             className={"input-description"}
@@ -53,7 +70,7 @@ export const ReminderForm = ({defaultReminder, onSubmit, date, buttonLabel}) => 
             id="time"
             label="Set time"
             type="datetime-local"
-            defaultValue={moment(newReminder.time).format("YYYY-MM-DDThh:mm")}
+            defaultValue={moment(newReminder.time).format("YYYY-MM-DDTHH:mm")}
             className={"date-picker"}
             onChange={onTimeChange}
             InputLabelProps={{
@@ -66,11 +83,13 @@ export const ReminderForm = ({defaultReminder, onSubmit, date, buttonLabel}) => 
         <button
             className={"submit-btn"}
             onClick={(e) => {
-                e.preventDefault() 
-                onSubmit(newReminder)
+                e.preventDefault()
+                if (validateFields(newReminder))
+                    onSubmit(newReminder)
             }}
             type="submit">
             {buttonLabel}
-    </button>
+        </button>
+        <span style={{color: "red", fontSize: "0.8rem", height: "1rem"}}> {errorMsg} </span>
     </div>
 }

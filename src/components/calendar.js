@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Day } from './day'
 import { useSelector, useDispatch } from 'react-redux'
 import { addReminderAction, updateReminderAction, delReminderAction } from '../redux/redux'

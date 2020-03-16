@@ -28,7 +28,6 @@ export const store = createStore(
 )
 
 function reducer(state, { type, payload }) {
-    console.log('reducer',payload)
     switch (type) {
         case "ADD_REMINDER":
             return {
