@@ -1,7 +1,7 @@
 import React from 'react'
 import { Day } from './day'
 import { useSelector, useDispatch } from 'react-redux'
-import { addReminderAction, updateReminderAction, delReminderAction } from '../redux/redux'
+import { addReminderAction, updateReminderAction, fetchWeatherInfo } from '../redux/redux'
 import { v1 as uuidv1 } from 'uuid'
 import moment from 'moment'
 
@@ -52,12 +52,15 @@ export const Calendar = (props) => {
     const dispatch = useDispatch()
     const addReminder = (reminder) => dispatch(addReminderAction(reminder))
     const updateReminder = (reminder) => dispatch(updateReminderAction(reminder))
+    const fetchWeather = (reminder) => dispatch(fetchWeatherInfo(reminder))
 
     const handleNewReminder = (reminder) => {
-        addReminder({
+        const newReminder = {
             ...reminder,
             id: uuidv1()
-        })
+        }
+        fetchWeather(newReminder)
+        addReminder(newReminder)
     }
     const handleEditedReminder = (reminder) => {
         updateReminder(reminder)

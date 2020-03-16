@@ -6,14 +6,16 @@ export const config = {
         foreground: "#F3F4EF",
         reminderColors: [
             "#B3A35F",
+            "#43BFD6",
             "#EB5E28",
             "#3A372B",
             "#878674",
             "#F3BB45",
             "#A8CDE1",
-            "#43BFD6",
             "#F0BE1E",
             "#976AAF"
         ]
-    }
+    },
+    API_KEY: "db7dcb5cff2b47390bc6cec16d599a07",
+    API_HOUR_RES: 3
 }

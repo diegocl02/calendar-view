@@ -1,6 +1,9 @@
-import { createStore } from 'redux'
+import { applyMiddleware, createStore } from 'redux'
 import { v1 as uuidv1 } from 'uuid'
 import moment from 'moment'
+import axios from 'axios';
+import thunk from 'redux-thunk'
+import { config } from '../shared/config'
 
 const initialState = {
     date: moment(),
@@ -10,21 +13,26 @@ const initialState = {
             time: 1584208263000,
             city: "Sao Paulo",
             color: "#878674",
-            title: "Travel"
+            title: "Travel",
+            weather: {}
         },
         {
             id: uuidv1(),
             time: 1584208263000,
             city: "Sao Paulo",
             color: "#A8CDE1",
-            title: "Pet"
+            title: "Pet",
+            weather: {}
         }
     ]
 }
 
+const middleware = applyMiddleware(thunk)
+
 export const store = createStore(
     reducer,
-    initialState
+    initialState,
+    middleware
 )
 
 function reducer(state, { type, payload }) {
@@ -50,6 +58,21 @@ function reducer(state, { type, payload }) {
                     payload
                 ]
             }
+        case "FETCH_WEATHER":
+            return {
+                ...state,
+                reminders: [
+                    ...state.reminders.filter(remind => remind.id !== payload.reminder.id),
+                    {
+                        ...payload.reminder,
+                        weather: payload.weatherInfo.data.list.filter(weather => {
+                            const dur = moment.duration((weather.dt * 1000) - payload.reminder.time)
+                            return dur.asHours() > (config.API_HOUR_RES * -1) 
+                                && dur.asHours() < config.API_HOUR_RES
+                        })[0]
+                    }
+                ]
+            }
         default:
             return state
     }
@@ -69,3 +92,26 @@ export const delReminderAction = (reminderId) => ({
     type: "DEL_REMINDER",
     payload: reminderId
 })
+
+export const fetchWeatherInfo = (reminder) => {
+    if (!reminder.city || reminder.city === ""){
+        return {}
+    }
+    return (dispatch) => {
+        axios.get(`https://api.openweathermap.org/data/2.5/forecast?q=${reminder.city}&appid=${config.API_KEY}`)
+            .then(res => res)
+            .then(res => {
+                console.log(res);
+                dispatch({
+                    type: "FETCH_WEATHER",
+                    payload: {
+                        reminder: reminder,
+                        weatherInfo: res
+                    }
+                })
+            })
+            .catch(err => {
+                console.log(err)
+            })
+    }
+}

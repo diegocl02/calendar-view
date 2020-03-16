@@ -18,6 +18,7 @@ export const Day = ({ date, number, reminders, handleNewReminder, handleEditedRe
         console.log(editedReminder)
         handleEditedReminder(editedReminder)
     }
+    console.log(selectedReminder)
     return [<div key={'day'}
         className="day-container"
         onClick={(e) => {
@@ -63,10 +64,20 @@ export const Day = ({ date, number, reminders, handleNewReminder, handleEditedRe
         ? <Dialog
             key={"dialog"}
             handleCloseDialog={() => setEditingReminderModal(false)}>
-            <ReminderForm
-                defaultReminder={selectedReminder}
-                onSubmit={handleSubmitEditedReminder}
-                buttonLabel={"Update Reminder"} />
+            <div className={"edit-dialog"}>
+                <ReminderForm
+                    defaultReminder={selectedReminder}
+                    onSubmit={handleSubmitEditedReminder}
+                    buttonLabel={"Update Reminder"} />
+                <div className={"weather"}>
+                    {selectedReminder.weather && selectedReminder.weather.main 
+                        && <span> Temperature: {selectedReminder.weather.main.temp} </span>}
+                    {selectedReminder.weather && selectedReminder.weather.main 
+                        && <span> Min: {selectedReminder.weather.main.temp_min} </span>}
+                    {selectedReminder.weather && selectedReminder.weather.main 
+                        && <span> Max: {selectedReminder.weather.main.temp_max} </span>}
+                </div>
+            </div>
         </Dialog>
         : null
     ]

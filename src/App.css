@@ -51,6 +51,14 @@
 
 .form-container {
   display: flex;
+  width: 100%;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.edit-dialog{
+  display: flex;
   height: 100%;
   flex-direction: column;
   justify-content: center;
