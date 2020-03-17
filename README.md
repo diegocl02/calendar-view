@@ -1,8 +1,6 @@
-# Product Name
-> Calendar View
+# Calendar View
 
 A demo calendar application using React and Redux.
-
 
 ## Installation
 All OS:
