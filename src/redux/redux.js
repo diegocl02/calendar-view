@@ -1,5 +1,4 @@
 import { applyMiddleware, createStore } from 'redux'
-import { v1 as uuidv1 } from 'uuid'
 import moment from 'moment'
 import axios from 'axios';
 import thunk from 'redux-thunk'
@@ -7,46 +6,7 @@ import { config } from '../shared/config'
 
 const initialState = {
     date: moment(),
-    reminders: [
-        {
-            id: uuidv1(),
-            time: 1584208263000,
-            city: "Sao Paulo",
-            color: "#878674",
-            title: "Travel",
-            weather: {
-                main: {
-                    temp: 293
-                },
-                weather: [
-                    {
-                        main: "cloud",
-                        icon: "11d"
-                    }
-                ],
-            },
-            isFetchingWeather: false
-        },
-        {
-            id: uuidv1(),
-            time: 1584208263000,
-            city: "Sao Paulo",
-            color: "#A8CDE1",
-            title: "Pet",
-            weather: {
-                main: {
-                    temp: 296
-                },
-                weather: [
-                    {
-                        main: "cloud",
-                        icon: "10d"
-                    }
-                ]
-            },
-            isFetchingWeather: "Fetching weather for this event..."
-        }
-    ]
+    reminders: []
 }
 
 const middleware = applyMiddleware(thunk)
