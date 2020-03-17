@@ -6,7 +6,8 @@ import {
     updateReminderAction,
     fetchWeatherInfo,
     updateCurrentMonthAction,
-    delReminderAction
+    delReminderAction,
+    delDayRemindersAction
 } from '../redux/redux'
 import { v1 as uuidv1 } from 'uuid'
 import moment from 'moment'
@@ -21,6 +22,7 @@ export const Calendar = () => {
     const fetchWeather = (reminder) => dispatch(fetchWeatherInfo(reminder))
     const updateMonth = (date) => dispatch(updateCurrentMonthAction(date))
     const delReminder = (reminderId) => dispatch(delReminderAction(reminderId))
+    const delDayReminders = (date) => dispatch(delDayRemindersAction(date))
 
     const handleNewReminder = (reminder) => {
         const newReminder = {
@@ -42,6 +44,9 @@ export const Calendar = () => {
     }
     const handleNext = (e) => {
         updateMonth(moment(date).add(1, 'M'))
+    }
+    const handleDelDayReminders = (date) => {
+        delDayReminders(date)
     }
     const weekdays = moment.weekdaysShort()
     const dayArray = getDaysArray(date, reminders)
@@ -81,6 +86,7 @@ export const Calendar = () => {
                                 handleNewReminder={handleNewReminder}
                                 handleEditedReminder={handleEditedReminder}
                                 handleDeleteReminder={handleDeleteReminder}
+                                handleDeleteDayReminders={handleDelDayReminders}
                                 style={{
                                     ...dayIndex === 0  && {
                                             backgroundColor:"#f2f2f2", 

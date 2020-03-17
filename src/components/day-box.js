@@ -11,6 +11,7 @@ export const DayBox = ({
     handleNewReminder,
     handleEditedReminder,
     handleDeleteReminder,
+    handleDeleteDayReminders,
     isDisabled,
     style
 }) => {
@@ -44,6 +45,16 @@ export const DayBox = ({
             key={'day-number'}
             className={`day-number ${isDisabled ? ' disabled' : ''}`}>
             <span data-testid="day-number">{dayNumber}</span>
+            {
+                reminders.length > 0 && <span
+                className="delete-all" 
+                onClick={(e) => {
+                    e.stopPropagation()
+                    handleDeleteDayReminders(date)
+                }}>
+                    Delete all
+                </span>
+            }
         </div>
         <div key={'day-reminder'} className="reminders-container">
             {

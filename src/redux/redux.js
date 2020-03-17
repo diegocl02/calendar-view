@@ -75,6 +75,12 @@ function reducer(state, { type, payload }) {
                 ...state,
                 reminders: state.reminders.filter(remind => remind.id !== payload)
             }
+        case "DEL_GROUP":
+            return {
+                ...state,
+                reminders: state.reminders
+                    .filter(remind => !moment(remind.time).isSame(moment(payload), 'day'))
+            }
         case "UPDATE_REMINDER":
             return {
                 ...state,
@@ -130,6 +136,11 @@ export const updateReminderAction = (reminder) => ({
 export const delReminderAction = (reminderId) => ({
     type: "DEL_REMINDER",
     payload: reminderId
+})
+
+export const delDayRemindersAction = (date) => ({
+    type: "DEL_GROUP",
+    payload: date
 })
 
 export const fetchWeatherInfo = (reminder) => {
