@@ -4,13 +4,15 @@ import { ReminderForm } from './reminder-form'
 import { config } from '../shared/config'
 import { kelvinToCelsius } from '../shared/utils'
 
-export const Day = ({
+export const DayBox = ({
     date,
     dayNumber,
     reminders,
     handleNewReminder,
     handleEditedReminder,
-    isDisabled
+    handleDeleteReminder,
+    isDisabled,
+    style
 }) => {
     const [showNewReminderModal, setshowNewReminderModal] = useState(false)
     const [showEditingReminderModal, setEditingReminderModal] = useState(false)
@@ -24,17 +26,23 @@ export const Day = ({
         setEditingReminderModal(false)
         handleEditedReminder(editedReminder)
     }
-    console.log(selectedReminder)
+    const handleDelReminder = (reminderDeleted) => {
+        setEditingReminderModal(false)
+        handleDeleteReminder(reminderDeleted)
+    }
     return [<div key={'day'}
-        className={`day-container${isDisabled ? ' disabled' : ''}`}
+        className={`day-container`}
+        style={{...style}}
         onClick={(e) => {
             if (isDisabled)
                 return
             e.preventDefault()
             setshowNewReminderModal(true)
         }}>
-        <div key={'day-number'} className="day-number">
-            <span>{dayNumber}</span>
+        <div
+            key={'day-number'}
+            className={`day-number ${isDisabled ? ' disabled' : ''}`}>
+            <span data-testid="day-number">{dayNumber}</span>
         </div>
         <div key={'day-reminder'} className="reminders-container">
             {
@@ -42,7 +50,11 @@ export const Day = ({
                     return <div
                         key={index}
                         className={"mini-reminder"}
-                        style={{ backgroundColor: reminder.color }}
+                        style={{
+                            backgroundColor: isDisabled
+                                ? 'gainsboro'
+                                : reminder.color
+                        }}
                         onClick={(e) => {
                             if (isDisabled)
                                 return
@@ -61,7 +73,7 @@ export const Day = ({
             key={"dialog"}
             handleCloseDialog={() => setshowNewReminderModal(false)}>
             <div className={"edit-dialog"}>
-                <h3> Add New Reminder </h3>
+                <h3> Create New Reminder </h3>
                 <ReminderForm
                     defaultReminder={{
                         color: config.theme.reminderColors[0],
@@ -69,7 +81,7 @@ export const Day = ({
                     }}
                     date={date}
                     onSubmit={handleSubmitNewReminder}
-                    buttonLabel={"Add Reminder"} />
+                    buttonLabel={"Create"} />
             </div>
         </Dialog >
         : null,
@@ -82,7 +94,18 @@ export const Day = ({
                 <ReminderForm
                     defaultReminder={selectedReminder}
                     onSubmit={handleSubmitEditedReminder}
-                    buttonLabel={"Update Reminder"} />
+                    buttonLabel={"Update"} />
+
+                <button
+                    className={"delete-btn"}
+                    onClick={(e) => {
+                        e.preventDefault()
+                        handleDelReminder(selectedReminder)
+                    }}
+                    type="submit">
+                    {'Delete'}
+                </button>
+
                 <div className={"weather"}>
                     {selectedReminder.weather && selectedReminder.weather.main
                         && <span className={"forecast-span"}>

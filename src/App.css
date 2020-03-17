@@ -44,7 +44,7 @@
 
 .dialog-content {
   width: 50%;
-  height: 50%;
+  max-height: 80%;
   margin: 10% 25%;
   background-color: #e6e6e6;
 }
@@ -73,9 +73,10 @@
   display: flex;
   flex-direction: column;
   width: 80%;
-  margin: 10px 10% 10px;
+  margin: auto;
   align-items: center;
   min-width: 800px;
+  max-width: 1000px;
 }
 
 .header-row{
@@ -131,6 +132,13 @@
   font-size: 1rem;
 }
 
+.delete-btn{
+  margin: 0px 10px 5px;
+  width: 200px;
+  color: black;
+  font-size: 1rem;
+}
+
 .color-select-container{
   display: flex;
   flex-direction: row;
@@ -152,6 +160,7 @@
 .weather {
   display: flex;
   align-items: center;
+  margin-bottom: 10px;
 }
 
 .forecast-span {
@@ -164,7 +173,7 @@
 }
 
 .disabled {
-  color: gainsboro
+  color: silver
 }
 
 .month-container {

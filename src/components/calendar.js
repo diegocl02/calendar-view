@@ -1,99 +1,26 @@
 import React from 'react'
-import { Day } from './day'
+import { DayBox } from './day-box'
 import { useSelector, useDispatch } from 'react-redux'
 import {
     addReminderAction,
     updateReminderAction,
     fetchWeatherInfo,
-    updateCurrentMonth
+    updateCurrentMonthAction,
+    delReminderAction
 } from '../redux/redux'
 import { v1 as uuidv1 } from 'uuid'
 import moment from 'moment'
+import { getDaysArray } from '../shared/utils'
 
-const WEEKS_PER_MONTH = 5
-const DAYS_PER_WEEK = 7
-
-const getFirstDayOfMonth = (date) => {
-    return date.startOf("month").day()
-}
-
-const getFirstDateOfNextMonth = (date) => {
-    let newDate = moment(date)
-    return newDate.add(1, 'M').startOf("month").date()
-}
-
-const getEndDateOfPreviousMonth = (date) => {
-    let newDate = moment(date)
-    return newDate.subtract(1, 'M').endOf("month").date()
-}
-
-
-const getRemindersByDay = (date, reminders) => {
-    return reminders.filter(reminder =>
-        moment(reminder.time)
-            .isSame(moment(date, "YYYY-MM-D"), 'day')
-    ).sort((remA, remB) => remA.time - remB.time)
-}
-
-const getDaysArray = (date, reminders) => {
-    let daysArray = []
-    let dayCount = 0
-    let startDay = getFirstDayOfMonth(date)
-    let startNextMonth = getFirstDateOfNextMonth(date)
-    let startOfPreviousMonth = getEndDateOfPreviousMonth(date) - startDay + 1
-
-    for (let i = 0; i < WEEKS_PER_MONTH; i++) {
-        let week = []
-        if (i === 0) {
-            for (let j = 0; j < startOfPreviousMonth && j !== startDay; j++) {
-                let newDate = moment(`${moment(date).subtract(1, 'M')
-                    .format("YYYY-MM-")}${startNextMonth}`, "YYYY-MM-D")
-                week.push({
-                    date: newDate,
-                    dayNumber: startOfPreviousMonth,
-                    reminders: getRemindersByDay(newDate, reminders),
-                    isDisabled: true
-                })
-                startOfPreviousMonth++
-            }
-        }
-        for (let j = 0; j < DAYS_PER_WEEK; j++) {
-            if (j === startDay || dayCount > 0) {
-                dayCount++;
-            }
-            if (dayCount > 0 && dayCount <= date.daysInMonth()) {
-                let newDate = moment(`${date.format("YYYY-MM-")}${dayCount}`, "YYYY-MM-D")
-                week.push({
-                    date: newDate,
-                    dayNumber: dayCount,
-                    reminders: getRemindersByDay(newDate, reminders)
-                })
-            }
-            else if (i === 4) {
-                let newDate = moment(`${moment(date).add(1, 'M')
-                    .format("YYYY-MM-")}${startNextMonth}`, "YYYY-MM-D")
-                week.push({
-                    date: newDate,
-                    dayNumber: startNextMonth,
-                    reminders: getRemindersByDay(newDate, reminders),
-                    isDisabled: true
-                })
-                startNextMonth++;
-            }
-        }
-        daysArray.push(week)
-    }
-    return daysArray
-}
-
-export const Calendar = (props) => {
+export const Calendar = () => {
     const reminders = useSelector((state) => state.reminders)
     const date = useSelector((state) => state.date)
     const dispatch = useDispatch()
     const addReminder = (reminder) => dispatch(addReminderAction(reminder))
     const updateReminder = (reminder) => dispatch(updateReminderAction(reminder))
     const fetchWeather = (reminder) => dispatch(fetchWeatherInfo(reminder))
-    const updateMonth = (date) => dispatch(updateCurrentMonth(date))
+    const updateMonth = (date) => dispatch(updateCurrentMonthAction(date))
+    const delReminder = (reminderId) => dispatch(delReminderAction(reminderId))
 
     const handleNewReminder = (reminder) => {
         const newReminder = {
@@ -102,6 +29,9 @@ export const Calendar = (props) => {
         }
         fetchWeather(newReminder)
         addReminder(newReminder)
+    }
+    const handleDeleteReminder = (reminder) => {
+        delReminder(reminder.id)
     }
     const handleEditedReminder = (reminder) => {
         updateReminder(reminder)
@@ -144,11 +74,17 @@ export const Calendar = (props) => {
                 dayArray.map((week, weekIndex) => {
                     return <div key={`week-${weekIndex}`} className={"week-container"}>
                         {
-                            week.map((day, dayIndex) => <Day
+                            week.map((day, dayIndex) => <DayBox
                                 key={`day-${dayIndex}`}
                                 {...day}
                                 handleNewReminder={handleNewReminder}
                                 handleEditedReminder={handleEditedReminder}
+                                handleDeleteReminder={handleDeleteReminder}
+                                style={{
+                                    ...dayIndex === 0 || dayIndex === 6
+                                        ? {backgroundColor:"#f2f2f2", color: "#4a76a6"}
+                                        : {}
+                                }}
                             />)
                         }
                     </div>

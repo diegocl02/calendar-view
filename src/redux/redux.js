@@ -87,7 +87,7 @@ function reducer(state, { type, payload }) {
                         ...payload.reminder,
                         weather: payload.weatherInfo.data.list.filter(weather => {
                             const dur = moment.duration((weather.dt * 1000) - payload.reminder.time)
-                            return dur.asHours() > (config.API_HOUR_RES * -1) 
+                            return dur.asHours() > (config.API_HOUR_RES * -1)
                                 && dur.asHours() < config.API_HOUR_RES
                         })[0]
                     }
@@ -103,7 +103,7 @@ function reducer(state, { type, payload }) {
     }
 }
 
-export const updateCurrentMonth = (date) => ({
+export const updateCurrentMonthAction = (date) => ({
     type: "UPDATE_MONTH",
     payload: date
 })
@@ -124,8 +124,8 @@ export const delReminderAction = (reminderId) => ({
 })
 
 export const fetchWeatherInfo = (reminder) => {
-    if (!reminder.city || reminder.city === ""){
-        return {}
+    if (!reminder.city || reminder.city === "") {
+        return { type: "" }
     }
     return (dispatch) => {
         axios.get(`https://api.openweathermap.org/data/2.5/forecast?q=${reminder.city}&appid=${config.API_KEY}`)

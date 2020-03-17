@@ -10,7 +10,7 @@ export const ReminderForm = ({ defaultReminder, onSubmit, buttonLabel }) => {
 
     const onTitleChange = (event) => {
         setErrorMsg(null)
-        setNewReminder({ ...newReminder, title: event.target.value })
+        setNewReminder({ ...newReminder, title: event.target.value.slice(0, 30) })
     }
     const onDescriptionChange = (event) => {
         setNewReminder({ ...newReminder, description: event.target.value })
@@ -26,7 +26,6 @@ export const ReminderForm = ({ defaultReminder, onSubmit, buttonLabel }) => {
         setNewReminder({ ...newReminder, color: color })
     }
     const validateFields = (newReminder) => {
-        console.log(newReminder)
         if (newReminder.title === undefined || newReminder.title === "") {
             setErrorMsg("You must use a title")
             return false
@@ -52,7 +51,6 @@ export const ReminderForm = ({ defaultReminder, onSubmit, buttonLabel }) => {
             placeholder="Description"
             value={newReminder.description || ""}
             onChange={onDescriptionChange}
-            maxLength="30"
         />
         <input
             className={"input-description"}
@@ -90,6 +88,8 @@ export const ReminderForm = ({ defaultReminder, onSubmit, buttonLabel }) => {
             type="submit">
             {buttonLabel}
         </button>
-        <span style={{ color: "red", fontSize: "0.8rem", height: "1rem" }}> {errorMsg} </span>
+        <span style={{ color: "red", fontSize: "0.8rem", height: "1rem" }}>
+            {errorMsg}
+        </span>
     </div>
 }
