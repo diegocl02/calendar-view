@@ -128,7 +128,7 @@ export const fetchWeatherInfo = (reminder) => {
         return { type: "" }
     }
     return (dispatch) => {
-        axios.get(`https://api.openweathermap.org/data/2.5/forecast?q=${reminder.city}&appid=${config.API_KEY}`)
+        axios.get(`${config.api.API_URL}q=${reminder.city}&appid=${config.api.API_KEY}`)
             .then(res => res)
             .then(res => {
                 dispatch({

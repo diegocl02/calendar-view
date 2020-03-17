@@ -2,12 +2,6 @@ import moment from 'moment'
 
 const DAYS_PER_WEEK = 7
 
-export const kelvinToCelsius = (kelvin) => {
-    if (isNaN(kelvin))
-        return "-"
-    return (kelvin - 273.15).toFixed(1)
-}
-
 const getFirstDayOfMonth = (date) => {
     return moment(date.startOf("month"))
 }
@@ -28,12 +22,18 @@ const getRemindersByDay = (date, reminders) => {
         .sort((remA, remB) => remA.time - remB.time)
 }
 
+/**
+ * Returns a matrix of day objects corresponding to the calendar structure for a single month 
+ * @param {*} currentDate a date of the month from which we want to generate the array
+ * @param {*} reminders a complete list of reminders
+ */
 export const getDaysArray = (currentDate, reminders) => {
     let daysArray = []
     let dayCount = 1
     let startDay = getFirstDayOfMonth(currentDate)
     let startNextMonth = getFirstDateOfNextMonth(currentDate)
-    let startOfPreviousMonth = getEndDateOfPreviousMonth(currentDate).subtract(startDay.day() - 1, 'd')
+    let startOfPreviousMonth = getEndDateOfPreviousMonth(currentDate)
+        .subtract(startDay.day() - 1, 'd')
 
     for (let i = 0; dayCount <= currentDate.daysInMonth(); i++) {
         let week = []
@@ -77,4 +77,14 @@ export const getDaysArray = (currentDate, reminders) => {
         daysArray.push(week)
     }
     return daysArray
+}
+
+/**
+ * Converts the temperature from Kelvin to Celsius
+ * @param {*} tempOnKelvin number value of the temperature on Kelvins
+ */
+export const kelvinToCelsius = (tempOnKelvin) => {
+    if (isNaN(tempOnKelvin))
+        return "-"
+    return (tempOnKelvin - 273.15).toFixed(1)
 }

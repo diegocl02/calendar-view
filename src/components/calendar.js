@@ -34,6 +34,7 @@ export const Calendar = () => {
         delReminder(reminder.id)
     }
     const handleEditedReminder = (reminder) => {
+        fetchWeather(reminder)
         updateReminder(reminder)
     }
     const handlePrev = (e) => {

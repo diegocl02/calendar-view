@@ -32,7 +32,7 @@ export const DayBox = ({
     }
     return [<div key={'day'}
         className={`day-container`}
-        style={{...style}}
+        style={{ ...style }}
         onClick={(e) => {
             if (isDisabled)
                 return
@@ -109,15 +109,17 @@ export const DayBox = ({
                 <div className={"weather"}>
                     {selectedReminder.weather && selectedReminder.weather.main
                         && <span className={"forecast-span"}>
-                            <b>Forecast for this event</b>: {`${kelvinToCelsius(selectedReminder.weather.main.temp)} C°`}
+                            <b>Forecast for this event</b>:
+                            {`${kelvinToCelsius(selectedReminder.weather.main.temp)} C°`}
                         </span>}
                     {selectedReminder.weather && selectedReminder.weather.weather
-                        && <span className={"forecast-span"}> - {selectedReminder.weather.weather[0].main} </span>}
+                        && <span className={"forecast-span"}> -
+                        {selectedReminder.weather.weather[0].main} </span>}
                     {selectedReminder.weather && selectedReminder.weather.weather
                         && <img
                             className={"weather-icon"}
                             alt={`weather-icon`}
-                            src={`http://openweathermap.org/img/wn/${selectedReminder.weather.weather[0].icon}@2x.png`}>
+                            src={`${config.api.API_URL}${selectedReminder.weather.weather[0].icon}@2x.png`}>
                         </img>}
                 </div>
             </div>
