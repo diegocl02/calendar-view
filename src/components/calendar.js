@@ -82,9 +82,19 @@ export const Calendar = () => {
                                 handleEditedReminder={handleEditedReminder}
                                 handleDeleteReminder={handleDeleteReminder}
                                 style={{
-                                    ...dayIndex === 0 || dayIndex === 6
-                                        ? {backgroundColor:"#f2f2f2", color: "#4a76a6"}
-                                        : {}
+                                    ...dayIndex === 0  && {
+                                            backgroundColor:"#f2f2f2", 
+                                            color: "#4a76a6",
+                                            borderLeft: "thin solid black"
+                                        },
+                                    ...dayIndex === 6 && {
+                                        backgroundColor:"#f2f2f2", 
+                                        color: "#4a76a6"
+                                    },
+                                    ...{
+                                        borderRight: "thin solid black",
+                                        borderBottom: "thin solid black"
+                                    }
                                 }}
                             />)
                         }

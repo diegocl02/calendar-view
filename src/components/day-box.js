@@ -16,7 +16,7 @@ export const DayBox = ({
 }) => {
     const [showNewReminderModal, setshowNewReminderModal] = useState(false)
     const [showEditingReminderModal, setEditingReminderModal] = useState(false)
-    const [selectedReminder, setSelectedReminder] = useState({})
+    const [selectedReminderId, setSelectedReminderId] = useState({})
 
     const handleSubmitNewReminder = (newReminder) => {
         setshowNewReminderModal(false)
@@ -30,6 +30,7 @@ export const DayBox = ({
         setEditingReminderModal(false)
         handleDeleteReminder(reminderDeleted)
     }
+    const selectedReminder = reminders.find(reminder => selectedReminderId === reminder.id)
     return [<div key={'day'}
         className={`day-container`}
         style={{ ...style }}
@@ -60,7 +61,7 @@ export const DayBox = ({
                                 return
                             e.stopPropagation()
                             setEditingReminderModal(true)
-                            setSelectedReminder(reminder)
+                            setSelectedReminderId(reminder.id)
                         }}>
                         {reminder.title}
                     </div>
@@ -107,20 +108,27 @@ export const DayBox = ({
                 </button>
 
                 <div className={"weather"}>
-                    {selectedReminder.weather && selectedReminder.weather.main
-                        && <span className={"forecast-span"}>
-                            <b>Forecast for this event</b>:
-                            {`${kelvinToCelsius(selectedReminder.weather.main.temp)} C°`}
-                        </span>}
-                    {selectedReminder.weather && selectedReminder.weather.weather
-                        && <span className={"forecast-span"}> -
-                        {selectedReminder.weather.weather[0].main} </span>}
-                    {selectedReminder.weather && selectedReminder.weather.weather
-                        && <img
-                            className={"weather-icon"}
-                            alt={`weather-icon`}
-                            src={`${config.api.API_URL}${selectedReminder.weather.weather[0].icon}@2x.png`}>
-                        </img>}
+                    {
+                        selectedReminder.isFetchingWeather
+                            ? <span className={"fetching-span"}>
+                                {selectedReminder.isFetchingWeather}</span>
+                            : <>
+                                {selectedReminder.weather && selectedReminder.weather.main
+                                    && <span className={"forecast-span"}>
+                                        <b>Forecast for this event</b>:
+                            {` ${kelvinToCelsius(selectedReminder.weather.main.temp)} C°`}
+                                    </span>}
+                                {selectedReminder.weather && selectedReminder.weather.weather
+                                    && <span className={"forecast-span"}> -
+                                {` ${selectedReminder.weather.weather[0].main}`} </span>}
+                                {selectedReminder.weather && selectedReminder.weather.weather
+                                    && <img
+                                        className={"weather-icon"}
+                                        alt={`weather-icon`}
+                                        src={`${config.api.IMG_URL}${selectedReminder.weather.weather[0].icon}@2x.png`}>
+                                    </img>}
+                            </>
+                    }
                 </div>
             </div>
         </Dialog>

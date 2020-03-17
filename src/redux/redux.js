@@ -23,8 +23,9 @@ const initialState = {
                         main: "cloud",
                         icon: "11d"
                     }
-                ]
-            }
+                ],
+            },
+            isFetchingWeather: false
         },
         {
             id: uuidv1(),
@@ -42,7 +43,8 @@ const initialState = {
                         icon: "10d"
                     }
                 ]
-            }
+            },
+            isFetchingWeather: "Fetching weather for this event..."
         }
     ]
 }
@@ -62,7 +64,10 @@ function reducer(state, { type, payload }) {
                 ...state,
                 reminders: [
                     ...state.reminders,
-                    payload
+                    {
+                        ...payload,
+                        isFetchingWeather: "Fetching weather for this event..."
+                    }
                 ]
             }
         case "DEL_REMINDER":
@@ -75,7 +80,10 @@ function reducer(state, { type, payload }) {
                 ...state,
                 reminders: [
                     ...state.reminders.filter(remind => remind.id !== payload.id),
-                    payload
+                    {
+                        ...payload,
+                        isFetchingWeather: "Fetching weather for this event..."
+                    }
                 ]
             }
         case "FETCH_WEATHER":
@@ -87,9 +95,10 @@ function reducer(state, { type, payload }) {
                         ...payload.reminder,
                         weather: payload.weatherInfo.data.list.filter(weather => {
                             const dur = moment.duration((weather.dt * 1000) - payload.reminder.time)
-                            return dur.asHours() > (config.API_HOUR_RES * -1)
-                                && dur.asHours() < config.API_HOUR_RES
-                        })[0]
+                            return dur.asHours() > (config.api.HOUR_RES * -1)
+                                && dur.asHours() < config.api.HOUR_RES
+                        })[0],
+                        isFetchingWeather: false
                     }
                 ]
             }
@@ -128,7 +137,7 @@ export const fetchWeatherInfo = (reminder) => {
         return { type: "" }
     }
     return (dispatch) => {
-        axios.get(`${config.api.API_URL}q=${reminder.city}&appid=${config.api.API_KEY}`)
+        axios.get(`${config.api.URL}${reminder.city}&appid=${config.api.KEY}`)
             .then(res => res)
             .then(res => {
                 dispatch({

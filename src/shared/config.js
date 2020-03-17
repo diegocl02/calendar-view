@@ -17,9 +17,9 @@ export const config = {
         ]
     },
     api: {
-        API_URL: "https://api.openweathermap.org/data/2.5/forecast",
-        API_IMG_URL: "http://openweathermap.org/img/wn/",
-        API_KEY: "db7dcb5cff2b47390bc6cec16d599a07",
-        API_HOUR_RES: 3
+        URL: "https://api.openweathermap.org/data/2.5/forecast?q=",
+        IMG_URL: "http://openweathermap.org/img/wn/",
+        KEY: "db7dcb5cff2b47390bc6cec16d599a07",
+        HOUR_RES: 3
     }
 }

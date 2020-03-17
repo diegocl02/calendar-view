@@ -88,8 +88,15 @@ export const ReminderForm = ({ defaultReminder, onSubmit, buttonLabel }) => {
             type="submit">
             {buttonLabel}
         </button>
-        <span style={{ color: "red", fontSize: "0.8rem", height: "1rem" }}>
-            {errorMsg}
-        </span>
+        {
+            errorMsg && <span style={{
+                color: "red",
+                fontSize: "0.8rem",
+                height: "1rem",
+                marginBottom: "1rem"
+            }}>
+                {errorMsg}
+            </span>
+        }
     </div>
 }
